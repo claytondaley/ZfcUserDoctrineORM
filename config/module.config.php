@@ -14,4 +14,11 @@ return array(
             )
         )
     ),
+
+    'service_manager' => array(
+        'invokables' => array(),
+        'factories' => array(
+            'zfcuser_doctrineorm_module_options' => 'ZfcUserDoctrineORM\Factory\Options\ModuleOptionsFactory',
+        ),
+    ),
 );
