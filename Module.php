@@ -3,11 +3,17 @@
 namespace ZfcUserDoctrineORM;
 
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use Zend\EventManager\Event;
+use Zend\Mvc\Application;
 
 class Module
 {
+    /**
+     * @param Event $e
+     */
     public function onBootstrap($e)
     {
+        /** @var Application $app */
         $app     = $e->getParam('application');
         $sm      = $app->getServiceManager();
         $options = $sm->get('zfcuser_module_options');
@@ -33,29 +39,13 @@ class Module
         );
     }
 
-    public function getServiceConfig()
-    {
-        return array(
-            'aliases' => array(
-                'zfcuser_doctrine_em' => 'Doctrine\ORM\EntityManager',
-            ),
-            'factories' => array(
-                'zfcuser_module_options' => function ($sm) {
-                    $config = $sm->get('Configuration');
-                    return new Options\ModuleOptions(isset($config['zfcuser']) ? $config['zfcuser'] : array());
-                },
-                'zfcuser_user_mapper' => function ($sm) {
-                    return new \ZfcUserDoctrineORM\Mapper\User(
-                        $sm->get('zfcuser_doctrine_em'),
-                        $sm->get('zfcuser_module_options')
-                    );
-                },
-            ),
-        );
-    }
-
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
+    }
+
+    public function getServiceConfig()
+    {
+        return include __DIR__ . '/config/service.config.php';
     }
 }
